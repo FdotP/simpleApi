@@ -1,0 +1,142 @@
+[
+    {
+        "nazwa": "T-shirt bawełniany",
+        "opis": "Komfortowy T-shirt z bawełny, idealny na lato.",
+        "cena": 39.99,
+        "waga": 0.2,
+        "kategoria": "odziez"
+    },
+    {
+        "nazwa": "Spodnie dżinsowe",
+        "opis": "Modne spodnie dżinsowe o klasycznym kroju.",
+        "cena": 89.99,
+        "waga": 0.5,
+        "kategoria": "odziez"
+    },
+    {
+        "nazwa": "Kapelusz słomkowy",
+        "opis": "Letni kapelusz słomkowy z szerokim rondem.",
+        "cena": 25.0,
+        "waga": 0.15,
+        "kategoria": "odziez"
+    },
+    {
+        "nazwa": "Rękawice ogrodowe",
+        "opis": "Wygodne rękawice ochronne do pracy w ogrodzie.",
+        "cena": 12.5,
+        "waga": 0.1,
+        "kategoria": "ogrodnictwo"
+    },
+    {
+        "nazwa": "Ziemia ogrodowa",
+        "opis": "Żyzna ziemia ogrodowa do roślin doniczkowych i rabat.",
+        "cena": 19.99,
+        "waga": 10.0,
+        "kategoria": "ogrodnictwo"
+    },
+    {
+        "nazwa": "Konewka 5L",
+        "opis": "Praktyczna konewka o pojemności 5 litrów.",
+        "cena": 29.99,
+        "waga": 0.7,
+        "kategoria": "ogrodnictwo"
+    },
+    {
+        "nazwa": "Etui na telefon",
+        "opis": "Etui silikonowe na telefon, odporne na zarysowania.",
+        "cena": 15.99,
+        "waga": 0.05,
+        "kategoria": "akcesoria"
+    },
+    {
+        "nazwa": "Plecak sportowy",
+        "opis": "Lekki plecak idealny na codzienne potrzeby.",
+        "cena": 59.99,
+        "waga": 0.3,
+        "kategoria": "akcesoria"
+    },
+    {
+        "nazwa": "Zegarek sportowy",
+        "opis": "Wodoodporny zegarek sportowy z funkcją GPS.",
+        "cena": 120.0,
+        "waga": 0.2,
+        "kategoria": "akcesoria"
+    },
+    {
+        "nazwa": "Chleb razowy",
+        "opis": "Zdrowy chleb razowy bez konserwantów.",
+        "cena": 4.99,
+        "waga": 0.5,
+        "kategoria": "jedzenie"
+    },
+    {
+        "nazwa": "Jogurt naturalny",
+        "opis": "Jogurt naturalny o niskiej zawartości tłuszczu.",
+        "cena": 1.99,
+        "waga": 0.2,
+        "kategoria": "jedzenie"
+    },
+    {
+        "nazwa": "Ser cheddar",
+        "opis": "Ser cheddar o intensywnym smaku.",
+        "cena": 9.99,
+        "waga": 0.25,
+        "kategoria": "jedzenie"
+    },
+    {
+        "nazwa": "Mycie okien",
+        "opis": "Usługa profesjonalnego mycia okien w domu.",
+        "cena": 150.0,
+        "waga": 0.01,
+        "kategoria": "uslugi"
+    },
+    {
+        "nazwa": "Pranie dywanów",
+        "opis": "Usługa prania dywanów z dojazdem do klienta.",
+        "cena": 100.0,
+        "waga": 0.01,
+        "kategoria": "uslugi"
+    },
+    {
+        "nazwa": "Montaż mebli",
+        "opis": "Usługa montażu mebli zakupionych w sklepie.",
+        "cena": 200.0,
+        "waga": 0.01,
+        "kategoria": "uslugi"
+    },
+    {
+        "nazwa": "Kurtka przeciwdeszczowa",
+        "opis": "Lekka kurtka chroniąca przed deszczem i wiatrem.",
+        "cena": 150.0,
+        "waga": 0.3,
+        "kategoria": "odziez"
+    },
+    {
+        "nazwa": "Grabie ogrodowe",
+        "opis": "Solidne grabie do liści i trawnika.",
+        "cena": 30.0,
+        "waga": 0.8,
+        "kategoria": "ogrodnictwo"
+    },
+    {
+        "nazwa": "Słuchawki bezprzewodowe",
+        "opis": "Słuchawki z redukcją hałasu i długą żywotnością baterii.",
+        "cena": 200.0,
+        "waga": 0.05,
+        "kategoria": "akcesoria"
+    },
+    {
+        "nazwa": "Czekolada mleczna",
+        "opis": "Delikatna czekolada mleczna o wysokiej jakości.",
+        "cena": 3.5,
+        "waga": 0.1,
+        "kategoria": "jedzenie"
+    },
+    {
+        "nazwa": "Usługa sprzątania domu",
+        "opis": "Kompleksowe sprzątanie domu z myciem okien.",
+        "cena": 250.0,
+        "waga": 0.01,
+        "kategoria": "uslugi"
+    }
+]
