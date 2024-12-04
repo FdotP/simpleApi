@@ -16,6 +16,7 @@
     "express-validator": "^7.2.0",
     "fs": "^0.0.1-security",
     "groq-sdk": "^0.7.0",
+    "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1"
   },
