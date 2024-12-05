@@ -1,22 +1,17 @@
 import mongoose from "mongoose";
-import Product from "../models/Product.js";
+import { productModel } from "../models/productModel.js";
 
 const phoneRegex = /^\d{9}$/;
 const emailRegex = /^[^@]+@[^@]+.[^@]+$/;
 
 function addOrderBodyUserValidator(body) {
   const errors = [];
-  if (body.user_id === undefined) {
-    errors.push("User id is required");
-  } else if (!mongoose.Types.ObjectId.isValid(body.user_id)) {
-    errors.push("User id is not valid");
-  }
 
-  if (body.user_name === undefined) {
+  if (body.nazwaUzytkownika === undefined) {
     errors.push("User name is required");
-  } else if (typeof body.user_name !== "string") {
+  } else if (typeof body.nazwaUzytkownika !== "string") {
     errors.push("User name must be a string");
-  } else if (body.user_name.trim() === "") {
+  } else if (body.nazwaUzytkownika.trim() === "") {
     errors.push("User name is empty");
   }
 
@@ -28,45 +23,46 @@ function addOrderBodyUserValidator(body) {
     errors.push("Email is not valid");
   }
 
-  if (body.phone === undefined) {
+  if (body.numerTelefonu === undefined) {
     errors.push("Phone number is required");
-  } else if (typeof body.phone !== "string") {
+  } else if (typeof body.numerTelefonu !== "string") {
     errors.push("Phone number must be a string");
-  } else if (!phoneRegex.test(body.phone)) {
+  } else if (!phoneRegex.test(body.numerTelefonu)) {
     errors.push("Phone number is not valid");
   }
 
   return errors;
 }
 
-function updateOrderStatusValidator(newstatus_id, oldstatus_id) {
+function updateOrderStatusValidator(newstatus, oldstatus) {
   const statusTransitions = {
-    status1: ["status2", "status3", "status4"],
-    status2: ["status3", "status4"],
-    status3: ["status4"],
+    niezatwierdzone: ["zatwierdzone", "zrealizowane"],
+    zatwierdzone: ["zrealizowane"],
   };
   const errors = [];
-  if (newstatus_id === undefined) {
+  if (newstatus === undefined) {
     errors.push("New status is required");
-  } else if (typeof newstatus_id !== "string") {
+  } else if (typeof newstatus !== "string") {
     errors.push("New status must be a string");
-  } else if (newstatus_id.trim() === "") {
+  } else if (newstatus.trim() === "") {
     errors.push("New status is empty");
   } else if (
-    !["status1", "status2", "status3", "status4"].includes(newstatus_id)
+    !["zatwierdzone", "anulowane", "niezatwierdzone", "zrealizowane"].includes(
+      newstatus
+    )
   ) {
     errors.push("New status is not valid");
   }
 
-  if (newstatus_id == oldstatus_id) {
+  if (newstatus == oldstatus) {
     errors.push("Order status is the same as before");
   }
-  if (oldstatus_id == "status3") {
+  if (oldstatus == "anulowane") {
     errors.push("Order status cannot be changed when order was cancelled");
   }
   if (
-    newstatus_id in statusTransitions &&
-    statusTransitions[newstatus_id].includes(oldstatus_id)
+    newstatus in statusTransitions &&
+    statusTransitions[newstatus].includes(oldstatus)
   ) {
     errors.push("Order status cannot be changed to previous status");
   }
@@ -75,41 +71,12 @@ function updateOrderStatusValidator(newstatus_id, oldstatus_id) {
 
 async function addOrderItemsValidator(items) {
   const errors = [];
-  if (items.length === 0) {
-    errors.push("Items filed is empty");
-    return errors;
-  }
+
   for (const element of items) {
-    if (!mongoose.Types.ObjectId.isValid(element.product_id)) {
-      errors.push("Product id is invalid");
-    } else {
-      const product = await Product.findById(element.product_id);
-      if (!product) {
-        errors.push(`Product with id ${element.product_id} not found`);
-      } else {
-        if (!Number.isInteger(element.quantity)) {
-          errors.push(
-            `ProductID: ${element.product_id} - Quantity is not a number`
-          );
-        } else if (element.quantity < 1) {
-          console.log(element.quantity);
-          errors.push(
-            `ProductID: ${element.product_id} - Quantity cannot be less than 1`
-          );
-        }
-        if (
-          typeof element.unit_price !== "number" ||
-          !Number.isFinite(element.unit_price)
-        ) {
-          errors.push(
-            `ProductID: ${element.product_id} - Price is not a valid number`
-          );
-        } else if (element.unit_price <= 0) {
-          errors.push(
-            `ProductID: ${element.product_id} - Price cannot be 0 or negative`
-          );
-        }
-      }
+    if (typeof element.price !== "number" || !Number.isFinite(element.price)) {
+      errors.push(`ProductID: ${element.item} - Price is not a valid number`);
+    } else if (element.price <= 0) {
+      errors.push(`ProductID: ${element.item} - Price cannot be 0 or negative`);
     }
   }
 

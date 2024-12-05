@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
       {
         role: user.role,
       },
-      "pindol",
+      "TokenKey",
       {
         algorithm: "HS256",
         expiresIn: "40m",
@@ -99,7 +99,7 @@ app.get("/user", async (req, res) => {
     const token = authorization.substring("Bearer ".length);
     console.log(token + "token");
     try {
-      const data = jsonwebtoken.verify(token, "pindol");
+      const data = jsonwebtoken.verify(token, "TokenKey");
       console.log(data);
       const user = await loginModel.findById(data.sub);
       // TODO idk
