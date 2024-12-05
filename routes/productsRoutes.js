@@ -8,11 +8,11 @@ import {
   updateProductBodyValidator,
 } from "../validators/productValidators.js";
 import mongoose, { mongo } from "mongoose";
-import e from "express";
+import { validateRequest } from "../auth/middleware.js";
 
 export const router = express.Router();
 
-router.route("/").get(async (req, res) => {
+router.route("/").get(validateRequest("user"), async (req, res) => {
   try {
     const results = await productModel.find();
     res
@@ -27,7 +27,7 @@ router.route("/").get(async (req, res) => {
   }
 });
 
-router.route("/:id").get(async (req, res) => {
+router.route("/:id").get(validateRequest("user"), async (req, res) => {
   try {
     const results = await productModel.findById(`${req.params.id}`);
     res
@@ -43,7 +43,7 @@ router.route("/:id").get(async (req, res) => {
 });
 
 //* add product
-router.route("/").post(async (req, res) => {
+router.route("/").post(validateRequest("admin"), async (req, res) => {
   try {
     const errors = addProductBodyValidator(req.body);
     if (errors.length > 0) {
@@ -85,7 +85,7 @@ router.route("/").post(async (req, res) => {
 
 //* update product
 
-router.route("/:id").put(async (req, res) => {
+router.route("/:id").put(validateRequest("admin"), async (req, res) => {
   try {
     const productId = req.params.id;
     const updates = req.body;
@@ -144,17 +144,19 @@ router.route("/:id").put(async (req, res) => {
   }
 });
 
-router.route("/:id/seo-description").get(async (req, res) => {
-  try {
-    const results = await productModel.find({ _id: req.params.id });
-    res.set("Content-Type", "text/html");
-    const chatCompletion = await getGroqChatCompletion(results);
-    res.send(Buffer.from(chatCompletion.choices[0]?.message?.content || ""));
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-      status: `${StatusCodes.INTERNAL_SERVER_ERROR} ${ReasonPhrases.INTERNAL_SERVER_ERROR}`,
-      message: "Error while fetching product with seo description",
-      error: error.message,
-    });
-  }
-});
+router
+  .route("/:id/seo-description")
+  .get(validateRequest("user"), async (req, res) => {
+    try {
+      const results = await productModel.find({ _id: req.params.id });
+      res.set("Content-Type", "text/html");
+      const chatCompletion = await getGroqChatCompletion(results);
+      res.send(Buffer.from(chatCompletion.choices[0]?.message?.content || ""));
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        status: `${StatusCodes.INTERNAL_SERVER_ERROR} ${ReasonPhrases.INTERNAL_SERVER_ERROR}`,
+        message: "Error while fetching product with seo description",
+        error: error.message,
+      });
+    }
+  });

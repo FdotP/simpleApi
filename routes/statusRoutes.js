@@ -1,10 +1,11 @@
 import express from "express";
 import { categoryModel } from "../models/kategoriaModel.js";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { validateRequest } from "../auth/middleware.js";
 
 export const router3 = express.Router();
 
-router3.route("/").get(async (req, res) => {
+router3.route("/").get(validateRequest("admin"), async (req, res) => {
   try {
     const results = await categoryModel.find();
     res
