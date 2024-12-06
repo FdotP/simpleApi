@@ -52,6 +52,8 @@ router2.route("/").post(validateRequest("admin"), async (req, res) => {
       });
     }
 
+
+
     if (req.body.listaZakupow.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         status: `${StatusCodes.BAD_REQUEST} ${ReasonPhrases.BAD_REQUEST}`,
@@ -89,6 +91,11 @@ router2.route("/").post(validateRequest("admin"), async (req, res) => {
         message: "Invalid order items data, order not added",
         errors: itemsErrors,
       });
+    }
+
+
+    if(!req.body.stanZamowienia){
+      req.body.stanZamowienia = "niezatwierdzone";
     }
 
     const stanid = await stanModel.findOne({ nazwa: req.body.stanZamowienia });
