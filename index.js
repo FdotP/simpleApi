@@ -68,9 +68,61 @@ app.post("/login", async (req, res) => {
         subject: user.id,
       }
     );
-    // TODO idk
-    res.send({ token });
+    const refreshToken = jsonwebtoken.sign(
+      {
+        role: user.role,
+      },
+      "TokenKey",
+      {
+        algorithm: "HS256",
+        expiresIn: "1d",
+        issuer: "my-api",
+        subject: user.id,
+      }
+    );
+
+    res.send({ token: token, refreshToken: refreshToken });
     return;
+  }
+});
+
+app.post("/refresh", (req, res) => {
+  const refreshToken = req.body.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(StatusCodes.UNAUTHORIZED).send({
+      status: `${StatusCodes.UNAUTHORIZED} ${ReasonPhrases.UNAUTHORIZED}`,
+      message: "No refresh cookie token provided.",
+    });
+  }
+  console.log(refreshToken);
+
+  try {
+    const decoded = jsonwebtoken.verify(refreshToken, "TokenKey");
+    console.log(decoded);
+    const accessToken = jsonwebtoken.sign(
+      {
+        role: decoded.role,
+      },
+      "TokenKey",
+      {
+        algorithm: "HS256",
+        expiresIn: "1d",
+        issuer: "my-api",
+        subject: decoded.sub,
+      }
+    );
+
+    res.status(StatusCodes.OK).send({
+      stasus: `${StatusCodes.OK} ${ReasonPhrases.OK}`,
+      message: "Token refreshed",
+      accessToken,
+    });
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).send({
+      status: `${StatusCodes.BAD_REQUEST} ${ReasonPhrases.BAD_REQUEST}`,
+      message: "Invalid token",
+    });
   }
 });
 

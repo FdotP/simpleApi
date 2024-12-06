@@ -15,12 +15,15 @@ export const validateRequest = (requiredRole) => {
 
     const token = authorization.substring("Bearer ".length);
     try {
-      const { exp, iss, role } = jsonwebtoken.verify(token, "TokenKey");
+      const decoded = jsonwebtoken.verify(token, "TokenKey");
+      const { exp, iss, role } = decoded;
       if (
         iss === "my-api" &&
         exp < Date.now() &&
         (role === requiredRole || role === "admin")
       ) {
+
+       
         next();
         return;
       } else {
