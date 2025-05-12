@@ -12,6 +12,8 @@ import { router3 } from "./routes/statusRoutes.js";
 import { loginModel } from "./models/userModel.js";
 import cors from "cors";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import { categoryModel } from "./models/kategoriaModel.js";
+import { productModel } from "./models/productModel.js";
 
 const app = express();
 app.use(bodyParser.json());
@@ -127,20 +129,21 @@ app.post("/refresh", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { login, password } = req.body;
+  const { login, email ,phoneNumber,  password} = req.body;
   const user = await loginModel.findOne({ login: login });
   if (!user) {
-    const user = loginModel({ login: login, password: password });
+    const user = loginModel({ login: login, password: password, email: email, phoneNumber: phoneNumber });
     user.save();
     res.status(StatusCodes.OK).send({
       status: `${StatusCodes.OK} ${ReasonPhrases.OK}`,
       message: "User created",
     });
+  } else {
+    res.status(StatusCodes.CONFLICT).send({
+      status: `${StatusCodes.CONFLICT} ${ReasonPhrases.CONFLICT}`,
+      message: "User already exists",
+    });
   }
-  res.status(StatusCodes.CONFLICT).send({
-    status: `${StatusCodes.CONFLICT} ${ReasonPhrases.CONFLICT}`,
-    message: "User already exists",
-  });
   return;
 });
 
@@ -155,7 +158,7 @@ app.get("/user", async (req, res) => {
       console.log(data);
       const user = await loginModel.findById(data.sub);
       // TODO idk
-      res.send(user.login);
+      res.send(user);
     } catch (err) {
       res.status(StatusCodes.FORBIDDEN).send({
         status: `${StatusCodes.FORBIDDEN} ${ReasonPhrases.FORBIDDEN}`,
@@ -172,13 +175,18 @@ app.get("/user", async (req, res) => {
 });
 
 app.post("/init", async (req, res) => {
+  const { fileContent } = req.body;
   let obj;
   let ans;
-  fs.readFile("file.json", "utf8", async (err, data) => {
-    if (err) throw err;
-    obj = JSON.parse(data);
-    obj.forEach(async (element) => {
+  try {
+    obj = JSON.parse(fileContent);
+    for (const element of obj) {
+      console.log(`Processing element: ${JSON.stringify(element)}`);
       const kat = await categoryModel.findOne({ nazwa: element.kategoria });
+      if (!kat) {
+        console.log(`Category not found: ${element.kategoria}`);
+        continue;
+      }
       let produkt = await productModel.find({
         nazwa: element.nazwa,
         opis: element.opis,
@@ -195,12 +203,20 @@ app.post("/init", async (req, res) => {
           kategoria: kat._id,
         });
         ans = await nowyProdukt.save();
+        console.log(`Product saved: ${JSON.stringify(ans)}`);
+      } else {
+        console.log(`Product already exists: ${element.nazwa}`);
       }
-    });
-    console.log(ans);
+    }
     res.status(StatusCodes.OK).send({
       status: `${StatusCodes.OK} ${ReasonPhrases.OK}`,
       message: "Products added",
     });
-  });
+  } catch (err) {
+    console.error(`Error processing file content: ${err.message}`);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      status: `${StatusCodes.INTERNAL_SERVER_ERROR} ${ReasonPhrases.INTERNAL_SERVER_ERROR}`,
+      message: "Failed to process file content",
+    });
+  }
 });

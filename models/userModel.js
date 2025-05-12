@@ -1,17 +1,25 @@
 import mongoose from "mongoose";
 
-export const user = new mongoose.Schema({
+export const user = new mongoose.Schema({ 
     login: {
-        type:String,
+      type:String,
+      required:true
+    },
+    email: {
+      type:String,
+      required:true
+    },
+    phoneNumber: {
+      type:Number,
       required:true
     },
     password: {
-        type:String,
+      type:String,
       required:true
     },
     role: {
       type:String,
-    required:true,
+      required:true,
     default:"user"
   }
   });

@@ -89,14 +89,14 @@ router.route("/:id").put(validateRequest("admin"), async (req, res) => {
   try {
     const productId = req.params.id;
     const updates = req.body;
-
+    console.log(updates);
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         status: `${StatusCodes.BAD_REQUEST} ${ReasonPhrases.BAD_REQUEST}`,
         message: "Invalid product id",
       });
     }
-
+    
     const errors = updateProductBodyValidator(req.body);
     if (errors.length > 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -104,11 +104,17 @@ router.route("/:id").put(validateRequest("admin"), async (req, res) => {
         errors,
       });
     }
-
     if (updates.kategoria) {
-      const category = await categoryModel.findOne({
-        nazwa: updates.kategoria,
-      });
+      const tmp = await categoryModel.find({ _id: updates.kategoria });
+      let category;
+      if(!tmp) {
+          category = await categoryModel.findOne({
+          nazwa: updates.kategoria,
+        });
+      }
+      else {
+        category = tmp;
+      }
       if (!category) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           status: `${StatusCodes.BAD_REQUEST} ${ReasonPhrases.BAD_REQUEST}`,
@@ -118,7 +124,7 @@ router.route("/:id").put(validateRequest("admin"), async (req, res) => {
         updates.kategoria = category._id;
       }
     }
-
+    
     const updatedProduct = await productModel.findOneAndUpdate(
       { _id: productId },
       { $set: updates },

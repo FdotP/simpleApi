@@ -14,7 +14,7 @@ export async function getGroqChatCompletion(item) {
     messages: [
       {
         role: "user",
-        content: `wygeneruj tylko i wyłącznie kod html zawierający opis produktu zgodny z wymaganiami SEO , oto dane produktu${item}, nie dodawaj zadnych komentarzy ani zadnej innej tresci niz kod html`
+        content: `wygeneruj tylko opis produktu zgodny z wymaganiami SEO , oto dane produktu${item}, nie dodawaj zadnych komentarzy ani zadnej innej tresci niz opis. NIe dodawaj zadnego Here is the product opis ani nic podobnego`
       },
     ],
     model: "llama3-8b-8192",
